@@ -110,7 +110,7 @@ module Bundler
     end
 
     def configuration
-      require "bundler/psyched_yaml"
+      require_relative "psyched_yaml"
       Gem.configuration
     rescue Gem::SystemExitException, LoadError => e
       Bundler.ui.error "#{e.class}: #{e.message}"
@@ -301,7 +301,7 @@ module Bundler
 
     def spec_from_gem(path, policy = nil)
       require "rubygems/security"
-      require "bundler/psyched_yaml"
+      require_relative "psyched_yaml"
       gem_from_path(path, security_policies[policy]).spec
     rescue Gem::Package::FormatError
       raise GemspecError, "Could not read gem at #{path}. It may be corrupted."
@@ -820,7 +820,7 @@ module Bundler
       end
 
       def all_specs
-        require "bundler/remote_specification"
+        require_relative "remote_specification"
         Gem::Specification.stubs.map do |stub|
           StubSpecification.from_stub(stub)
         end
@@ -869,7 +869,7 @@ module Bundler
 
       def use_gemdeps(gemfile)
         ENV["BUNDLE_GEMFILE"] ||= File.expand_path(gemfile)
-        require "bundler/gemdeps"
+        require_relative "gemdeps"
         runtime = Bundler.setup
         Bundler.ui = nil
         activated_spec_names = runtime.requested_specs.map(&:to_spec).sort_by(&:name)
