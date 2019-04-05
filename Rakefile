@@ -115,7 +115,7 @@ namespace :spec do
   # RubyGems specs by version
   namespace :rubygems do
     # When editing this list, also edit .travis.yml!
-    branches = %w[master]
+    branches = %w[master seg-fix-require-dash-i-beats-default-gem]
     releases = %w[v2.5.2 v2.6.14 v2.7.9 v3.0.3]
     (branches + releases).each do |rg|
       desc "Run specs with RubyGems #{rg}"
