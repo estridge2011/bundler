@@ -154,7 +154,7 @@ RSpec.describe "the lockfile format" do
     G
   end
 
-  it "outputs a warning if the current is older than lockfile's bundler version" do
+  it "warns if the current major version is the same as the lockfile's major version, but the patch or minor version is older" do
     lockfile <<-L
       GEM
         remote: file://localhost#{gem_repo1}/
@@ -203,7 +203,7 @@ RSpec.describe "the lockfile format" do
     G
   end
 
-  it "errors if the current is a major version older than lockfile's bundler version", :bundler => "3" do
+  it "errors if the current major version is older than lockfile's major version", :bundler => "3" do
     lockfile <<-L
       GEM
         remote: file://localhost#{gem_repo1}/
