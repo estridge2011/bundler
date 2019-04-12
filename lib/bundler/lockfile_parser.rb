@@ -103,7 +103,7 @@ module Bundler
       current_version = Gem::Version.create(Bundler::VERSION)
       current_major_version = current_version.segments.first
       major_bundler_version = bundler_version.segments.first
-      if current_major_version < major_bundler_version
+      if current_major_version < major_bundler_version && current_major_version > 2
         raise LockfileError, "You must use Bundler #{major_bundler_version} or greater with this lockfile."
       end
       return unless current_version < bundler_version

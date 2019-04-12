@@ -204,7 +204,57 @@ RSpec.describe "the lockfile format" do
     G
   end
 
-  it "errors if the current major version is older than lockfile's major version" do
+  it "warns if the current major version is older than lockfile's major version", :bundler => "< 3" do
+    current_version = Bundler::VERSION
+    newer_major = bump_major(current_version)
+
+    lockfile <<-L
+      GEM
+        remote: file://localhost#{gem_repo1}/
+        specs:
+          rack (1.0.0)
+
+      PLATFORMS
+        #{lockfile_platforms}
+
+      DEPENDENCIES
+        rack
+
+      BUNDLED WITH
+         #{newer_major}
+    L
+
+    install_gemfile <<-G
+      source "file://localhost#{gem_repo1}"
+
+      gem "rack"
+    G
+
+    pre_flag = prerelease?(newer_major) ? " --pre" : ""
+    warning_message = "the running version of Bundler (#{current_version}) is older " \
+                      "than the version that created the lockfile (#{newer_major}). " \
+                      "We suggest you to upgrade to the version that created the " \
+                      "lockfile by running `gem install bundler:#{newer_major}#{pre_flag}`."
+    expect(last_command.stderr).to include warning_message
+
+    lockfile_should_be <<-G
+      GEM
+        remote: file://localhost#{gem_repo1}/
+        specs:
+          rack (1.0.0)
+
+      PLATFORMS
+        #{lockfile_platforms}
+
+      DEPENDENCIES
+        rack
+
+      BUNDLED WITH
+         #{newer_major}
+    G
+  end
+
+  it "errors if the current major version is older than lockfile's bundler version", :bundler => "3" do
     current_version = Bundler::VERSION
     newer_major = bump_major(current_version)
 
